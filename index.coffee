@@ -27,9 +27,8 @@ aging =
   getInfo: -> "aging mixin: adds age property and howOld log"
 identity =
   add: (context) ->
-    @nick = context.nick
-    @who = -> console.log "Name:", @nick
-  getInfo: -> "identity mixin: adds nick property and who log"
+    @who = -> console.log "Name:", context.nick
+    getInfo: -> "identity mixin: adds nick property and who log"
 
 personality = compose [ aging, identity ]
 
