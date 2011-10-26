@@ -1,26 +1,19 @@
-make = (val) -> val
-add3 = (v) -> v + 3
-sub2 = (v) -> v - 2
-
 Object::pipe = (fn) -> fn @
-Function::fwd  = (fn) -> (params) => fn(@(params))
 
-get6 = ->
-  make(2)
-  .pipe(add3)
-  .pipe(add3)
-  .pipe(sub2)
+class FunctionWrapper
+  constructor: (fn) -> @fn = fn
+  fwd: (f) -> _f (params) => f.fn(@fn(params))
+  times: (count) ->
+    f = null
+    for i in [1..count]
+      do => f = if not f then this else f.fwd this
+    f
+_f = (fn) -> new FunctionWrapper fn
 
-add4 =
-  make
-  .fwd(add3)
-  .fwd(add3)
-  .fwd(sub2)
-
-moveLeft  = (x) -> x.x--; x
-moveRight = (x) -> x.x++; x
-moveDown  = (x) -> x.y--; x
-moveUp    = (x) -> x.y++; x
+moveLeft  = _f (x) -> x.x--; x
+moveRight = _f (x) -> x.x++; x
+moveDown  = _f (x) -> x.y--; x
+moveUp    = _f (x) -> x.y++; x
 
 moveNE    = moveUp.fwd moveRight
 moveSE    = moveDown.fwd moveRight
@@ -49,25 +42,12 @@ class ChessPiece
   position: -> prettyPosition({ @x, @y })
   legalMoves: ->
     @moves
-      .map((x) => x({ @x, @y }))
+      .map((x) => x.fn({ @x, @y }))
       .filter(isLegalPosition)
       .map(prettyPosition)
 
 class Knight extends ChessPiece
   moves: knightMoves
-
 knight = new Knight('B', 4)
-
-a = 0
-myFun = -> a++; a
-funTimes = (fn, times) ->
-  combined = null
-  for i in [1..times]
-    do ->
-      combined = if not combined then fn else combined.fwd fn
-  combined
-fun = funTimes myFun, 5
-
-
 
 
