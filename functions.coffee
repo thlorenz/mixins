@@ -8,6 +8,14 @@ class FunctionWrapper
     f
 _f = (fn) -> new FunctionWrapper fn
 
+
+Array::flatten =  ->
+  @.reduce (memo, value) ->
+    return memo.concat(value.flatten()) if Array.isArray value
+    memo.push value
+    memo
+  , []
+
 # ChessGame
 
 sq = [1..8]
@@ -38,17 +46,9 @@ knightNW  = moveUp.fwd    moveNW
 knightSW  = moveDown.fwd  moveSW
 knightMoves = [ knightNE, knightSE, knightNW, knightSW ]
 
-bishopMoves =
-  allNE
-    .concat allSE
-    .concat allNW
-    .concat allSW
+bishopMoves = [ allNE, allSE, allNW, allSW].flatten()
 
-rookMoves =
-  allLeft
-    .concat allRight
-    .concat allDown
-    .concat allUp
+rookMoves = [ allLeft, allRight, allDown, allUp ].flatten()
 
 queenMoves = bishopMoves.concat rookMoves
 
