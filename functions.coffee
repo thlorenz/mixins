@@ -31,6 +31,12 @@ knightNE  = moveUp.fwd moveNE
 knightSE  = moveDown.fwd moveSE
 knightNW  = moveUp.fwd moveNW
 knightSW  = moveDown.fwd moveSW
+knightMoves = [ knightNE, knightSE, knightNW, knightSW ]
+
+bishopMoves = [
+  moveNE, moveSE
+
+]
 
 charCodeOffset  = 'A'.charCodeAt(0) - 1
 prettyPosition  = (p) -> [ String.fromCharCode(p.x + charCodeOffset), p.y ]
@@ -40,7 +46,6 @@ class ChessPiece
   constructor: (x, y) ->
     @x = x.charCodeAt(0) - charCodeOffset
     @y = y
-
   position: -> prettyPosition({ @x, @y })
   legalMoves: ->
     @moves
@@ -49,6 +54,20 @@ class ChessPiece
       .map(prettyPosition)
 
 class Knight extends ChessPiece
-  moves: [knightNE, knightSE, knightNW, knightSW ]
+  moves: knightMoves
 
-knight = new Knight('B', 1)
+knight = new Knight('B', 4)
+
+a = 0
+myFun = -> a++; a
+funTimes = (fn, times) ->
+  combined = null
+  for i in [1..times]
+    do ->
+      combined = if not combined then fn else combined.fwd fn
+  combined
+fun = funTimes myFun, 5
+
+
+
+
